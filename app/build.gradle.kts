@@ -14,8 +14,14 @@ java {
     }
 }
 
+dependencies {
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
 application {
-    // vai ajustar já já pro seu package real
     mainClass.set("com.k.calc.App")
 }
 
