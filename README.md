@@ -9,6 +9,7 @@ Besides, I really needed a calculator...
 Current requirements to run:
 
 - Java 21+
+- Rust 1.92.0+
 
 Clone the repository:
 ```

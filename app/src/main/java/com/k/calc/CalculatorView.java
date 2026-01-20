@@ -10,7 +10,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
 public class CalculatorView {
@@ -55,8 +57,8 @@ public class CalculatorView {
         display.setPrefHeight(56);
 
         // historico
-        VBox top = new VBox(10, display, history);
-        top.setPadding(new Insets(12));
+        VBox top = new VBox(12, display, history);
+        top.setPadding(new Insets(16));
 
         history.setPrefHeight(140);
 
@@ -69,7 +71,14 @@ public class CalculatorView {
         grid.setVgap(8);
         grid.setPadding(new Insets(12));
 
-        // (linha, coluna) -> botão
+        ColumnConstraints colConst = new ColumnConstraints();
+        colConst.setPercentWidth(25);
+        grid.getColumnConstraints().addAll(colConst, colConst, colConst, colConst);
+
+        RowConstraints rowConst = new RowConstraints();
+        rowConst.setPercentHeight(20);
+        grid.getRowConstraints().addAll(rowConst, rowConst, rowConst, rowConst, rowConst);
+
         addBtn(grid, "C", 0, 0, () -> controller.clear(display, history));
         addBtn(grid, "⌫", 0, 1, () -> controller.backspace(display));
         addBtn(grid, "(", 0, 2, () -> controller.append(display, "("));
@@ -95,8 +104,18 @@ public class CalculatorView {
         addBtn(grid, "=", 4, 2, () -> controller.eval(display, history));
         addBtn(grid, "+", 4, 3, () -> controller.append(display, "+"));
 
-        // Deixa o grid no centro
         root.setCenter(grid);
+    }
+
+    private final void addBtn(GridPane grid, String text, int row, int col, Runnable action) {
+        Button btn = new Button(text);
+
+        // Grid
+        btn.setMaxWidth(Double.MAX_VALUE);
+        btn.setMaxHeight(Double.MAX_VALUE);
+
+        btn.setOnAction(e -> action.run());
+        grid.add(btn, col, row);
     }
 
     private final void wireEvents() {
@@ -106,14 +125,5 @@ public class CalculatorView {
                 action.run();
             }
         });
-    }
-
-    private final void addBtn(GridPane grid, String text, int row, int col, Runnable action) {
-        Button btn = new Button(text);
-
-        btn.setPrefSize(90.0, 56.0);
-        btn.setOnAction(e -> action.run());
-
-        grid.add(btn, col, row);
     }
 }

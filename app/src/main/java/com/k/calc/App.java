@@ -15,6 +15,8 @@ public class App extends Application {
         Scene scene = new Scene(view.getRoot(), 420, 560);
         stage.setTitle("Calculadora Poliglota");
         stage.setScene(scene);
+        scene.getStylesheets().add(
+                getClass().getResource("/styles/app.css").toExternalForm());
 
         stage.setOnCloseRequest(e -> controller.stopEngine());
         stage.show();
