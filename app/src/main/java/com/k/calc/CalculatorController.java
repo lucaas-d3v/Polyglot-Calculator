@@ -1,9 +1,13 @@
 package com.k.calc;
 
+import com.k.calc.backend.EngineClient;
+
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 public class CalculatorController {
+    private final EngineClient engine = new EngineClient();
+
     public CalculatorController() {
     }
 
@@ -26,21 +30,45 @@ public class CalculatorController {
     }
 
     public final void eval(TextField display, ListView<String> history) {
-        String expr = display.getText();
-
-        if (isValidInput(expr)) {
+        var expr = display.getText();
+        if (isValidInput(expr))
             return;
-        }
 
-        // Ainda sem backend
-        // Mais pra frente integração com rust
-        String result = "[engine ainda não implementada]";
+        display.setDisable(true);
 
-        history.getItems().add(expr + " = " + result);
-        display.clear();
+        engine.evalAsync(expr).whenComplete((value, err) -> {
+            javafx.application.Platform.runLater(() -> {
+                if (err == null) {
+                    history.getItems().add(expr + " = " + value);
+                    display.clear();
+                } else {
+                    history.getItems().add(expr + " = [ERRO] " + err.getMessage());
+                }
+                display.setDisable(false);
+            });
+        });
+
     }
 
     private final boolean isValidInput(String input) {
         return input == null || input.isEmpty();
+    }
+
+    public void startEngine() {
+        try {
+            String classpath = System.getProperty("java.class.path");
+            engine.start("java", "-cp", classpath, "com.k.calc.backend.FakeEngine");
+        } catch (Exception e) {
+            throw new RuntimeException("Falha ao iniciar FakeEngine", e);
+        }
+
+    }
+
+    public void stopEngine() {
+        try {
+            engine.shutdown();
+        } finally {
+            engine.close();
+        }
     }
 }

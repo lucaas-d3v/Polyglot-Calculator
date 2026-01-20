@@ -90,10 +90,10 @@ public class CalculatorView {
         addBtn(grid, "3", 3, 2, () -> controller.append(display, "3"));
         addBtn(grid, "-", 3, 3, () -> controller.append(display, "-"));
 
-        addBtn(grid, "0", 3, 0, () -> controller.append(display, "0"));
-        addBtn(grid, ".", 3, 1, () -> controller.append(display, "."));
-        addBtn(grid, "=", 3, 2, () -> controller.eval(display, history));
-        addBtn(grid, "+", 3, 3, () -> controller.append(display, "+"));
+        addBtn(grid, "0", 4, 0, () -> controller.append(display, "0"));
+        addBtn(grid, ".", 4, 1, () -> controller.append(display, "."));
+        addBtn(grid, "=", 4, 2, () -> controller.eval(display, history));
+        addBtn(grid, "+", 4, 3, () -> controller.append(display, "+"));
 
         // Deixa o grid no centro
         root.setCenter(grid);

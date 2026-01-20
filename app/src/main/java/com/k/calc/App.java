@@ -10,14 +10,21 @@ public class App extends Application {
         CalculatorController controller = new CalculatorController();
         CalculatorView view = new CalculatorView(controller);
 
-        Scene scene = new Scene(view.getRoot(), 420, 560);
+        controller.startEngine();
 
+        Scene scene = new Scene(view.getRoot(), 420, 560);
         stage.setTitle("Calculadora Poliglota");
         stage.setScene(scene);
+
+        stage.setOnCloseRequest(e -> controller.stopEngine());
         stage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public String t() {
+        return "app should have a greeting";
     }
 }
