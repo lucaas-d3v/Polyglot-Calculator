@@ -1,10 +1,29 @@
-# Ignore Gradle project-specific cache directory
-.gradle
+# --- Gradle & Java ---
+.gradle/
+**/build/
+**/bin/
+*.class
+*.jar
+*.war
+*.ear
+# Arquivos de log de teste que te enganaram
+*.log
+test-results/
 
-# Ignore Gradle build output directory
-**/build
+# --- IDEs (Eclipse, IntelliJ, VSCode) ---
+# Você não quer subir configurações da sua máquina
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
 
-# Ignore Kotlin plugin data
-.kotlin
+# --- Rust (Engine) ---
+engine/target/
+# Cargo.lock deve ser mantido se for uma aplicação, ignorado se for lib.
+# Como parece ser o core da app, mantenha o Cargo.lock por enquanto.
 
-engine/target
+# --- OS Junk ---
+.DS_Store
+Thumbs.db
