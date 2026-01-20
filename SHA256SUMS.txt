@@ -1,0 +1,1 @@
+550367dc0ae553293c6c944b370ef4bc6376608eb0fc3ff8cde28501b04ea5ea  app/build/jpackage/calculadorapoliglota_1.0_amd64.deb

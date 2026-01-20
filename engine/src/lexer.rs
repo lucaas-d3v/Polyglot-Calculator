@@ -62,7 +62,7 @@ impl<'a> Lexer<'a> {
     pub fn next_token(&mut self) -> Result<Token, CalcError> {
         self.skip_ws();
 
-        let Multiply = self.pos;
+        let multiply = self.pos;
         let b = match self.bump() {
             Some(x) => x,
             None => {
@@ -83,11 +83,11 @@ impl<'a> Lexer<'a> {
             b'0'..=b'9' | b'.' => {
                 // numero: [0-9]* ('.' [0-9]+)?
                 // aqui aceitamos começar com '.' para casos tipo ".5"
-                self.lex_number(Multiply, b)?
+                self.lex_number(multiply, b)?
             }
             _ => {
                 return Err(CalcError::new(
-                    Multiply,
+                    multiply,
                     "LEX_BAD_CHAR",
                     format!("Caractere invalido: '{}'", b as char),
                 ))
@@ -96,13 +96,13 @@ impl<'a> Lexer<'a> {
 
         Ok(Token {
             kind: tok,
-            pos: Multiply,
+            pos: multiply,
         })
     }
 
-    fn lex_number(&mut self, Multiply: usize, first: u8) -> Result<TokenKind, CalcError> {
+    fn lex_number(&mut self, multiply: usize, first: u8) -> Result<TokenKind, CalcError> {
         // já consumimos o primeiro char; agora consumimos o resto
-        let mut seen_dot = (first == b'.');
+        let mut seen_dot = first == b'.';
 
         while let Some(b) = self.peek_byte() {
             match b {
@@ -117,11 +117,11 @@ impl<'a> Lexer<'a> {
             }
         }
 
-        let slice = &self.src[Multiply..self.pos];
+        let slice = &self.src[multiply..self.pos];
         // impede casos tipo "." sozinho
         if slice == "." {
             return Err(CalcError::new(
-                Multiply,
+                multiply,
                 "LEX_BAD_NUMBER",
                 "Numero invalido: '.'",
             ));
@@ -129,7 +129,7 @@ impl<'a> Lexer<'a> {
 
         let n = slice.parse::<f64>().map_err(|_| {
             CalcError::new(
-                Multiply,
+                multiply,
                 "LEX_BAD_NUMBER",
                 format!("Numero invalido: '{}'", slice),
             )

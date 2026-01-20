@@ -1,8 +1,5 @@
 use std::io::{self, BufRead, Write};
 
-use serde::{/*Deserialize ,*/ Serialize};
-use serde_json::Value;
-
 use crate::protocols::{ErrResponse, ErrorBody, OkResponse};
 
 mod erros;

@@ -1,5 +1,11 @@
 package com.k.calc;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+
 import com.k.calc.backend.EngineClient;
 
 import javafx.scene.control.ListView;
@@ -55,15 +61,47 @@ public class CalculatorController {
         return input == null || input.isEmpty();
     }
 
-    public void startEngine() {
+    private static Path resolveEnginePath() throws IOException {
+        // 1) Tentativa: instalado junto do app (mesma pasta do executável)
         try {
-            String path = System.getProperty("user.home") + "/Projetos/calc/engine/target/release/calc_engine";
-            engine.start(path);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Falha ao iniciar o binario engine", e);
+            var uri = CalculatorController.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+            Path jarDir = Path.of(uri).getParent();
+            Path candidate = jarDir.resolve("native/linux-x86_64/calc_engine");
+            if (Files.exists(candidate) && Files.isExecutable(candidate)) {
+                return candidate;
+            }
+        } catch (Exception ignored) {
         }
 
+        // 2) Dev mode: extrair do classpath/resources
+        String resourcePath = "/native/linux-x86_64/calc_engine";
+        InputStream engineStream = CalculatorController.class.getResourceAsStream(resourcePath);
+
+        if (engineStream == null) {
+            throw new IllegalStateException("Binário do engine não encontrado em: " + resourcePath);
+        }
+
+        // Extrair para um arquivo temporário
+        Path tempEngine = Files.createTempFile("calc_engine", "");
+        Files.copy(engineStream, tempEngine, StandardCopyOption.REPLACE_EXISTING);
+        engineStream.close();
+
+        // Tornar executável
+        tempEngine.toFile().setExecutable(true);
+
+        // Deletar ao sair da aplicação
+        tempEngine.toFile().deleteOnExit();
+
+        return tempEngine;
+    }
+
+    public void startEngine() {
+        try {
+            Path enginePath = resolveEnginePath();
+            engine.start(enginePath.toString());
+        } catch (Exception e) {
+            throw new RuntimeException("Falha ao iniciar o binário engine", e);
+        }
     }
 
     public void stopEngine() {
