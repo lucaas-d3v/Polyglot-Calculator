@@ -56,10 +56,11 @@ public class CalculatorController {
 
     public void startEngine() {
         try {
-            String classpath = System.getProperty("java.class.path");
-            engine.start("java", "-cp", classpath, "com.k.calc.backend.FakeEngine");
+            String path = System.getProperty("user.home") + "/Projetos/calc/engine/target/release/calc_engine";
+            engine.start(path);
+
         } catch (Exception e) {
-            throw new RuntimeException("Falha ao iniciar FakeEngine", e);
+            throw new RuntimeException("Falha ao iniciar o binario engine", e);
         }
 
     }
