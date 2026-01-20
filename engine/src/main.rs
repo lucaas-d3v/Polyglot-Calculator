@@ -3,34 +3,12 @@ use std::io::{self, BufRead, Write};
 use serde::{/*Deserialize ,*/ Serialize};
 use serde_json::Value;
 
-/*
-#[derive(Deserialize)]
-struct EvalRequest {
-    op: String,
-    id: u64,
-    expr: Option<String>,
-}
-*/
+use crate::protocols::{ErrResponse, ErrorBody, OkResponse};
 
-#[derive(Serialize)]
-struct OkResponse {
-    id: u64,
-    ok: bool,
-    value: String,
-}
-
-#[derive(Serialize)]
-struct ErrorBody {
-    code: String,
-    message: String,
-}
-
-#[derive(Serialize)]
-struct ErrResponse {
-    id: u64,
-    ok: bool,
-    error: ErrorBody,
-}
+mod erros;
+mod lexer;
+mod protocols;
+mod shuting;
 
 fn main() {
     let stdin = io::stdin();
@@ -46,14 +24,14 @@ fn main() {
             continue;
         }
 
-        let parsed: Result<Value, _> = serde_json::from_str(&line);
-        if parsed.is_err() {
-            continue;
-        }
+        let req: Result<protocols::EvalRequest, _> = serde_json::from_str(&line);
+        let req = match req {
+            Ok(r) => r,
+            Err(_) => continue,
+        };
 
-        let v = parsed.unwrap();
-        let op = v["op"].as_str().unwrap_or("");
-        let id = v["id"].as_u64().unwrap_or(0);
+        let id = req.id;
+        let op = req.op.as_str();
 
         match op {
             "shutdown" => {
@@ -70,15 +48,34 @@ fn main() {
             }
 
             "eval" => {
-                let expr = v["expr"].as_str().unwrap_or("");
-                let resp = OkResponse {
-                    id,
-                    ok: true,
-                    value: format!("echo: {}", expr),
-                };
+                let expr = req.expr.unwrap_or_default();
+                match shuting::eval_expr(&expr) {
+                    Ok(v) => {
+                        // devolve como string
+                        let resp = OkResponse {
+                            id,
+                            ok: true,
+                            value: v.to_string(),
+                        };
 
-                writeln!(stdout, "{}", serde_json::to_string(&resp).unwrap()).unwrap();
-                stdout.flush().unwrap();
+                        writeln!(stdout, "{}", serde_json::to_string(&resp).unwrap()).unwrap();
+                        stdout.flush().unwrap();
+                    }
+
+                    Err(e) => {
+                        let resp = ErrResponse {
+                            id,
+                            ok: false,
+                            error: ErrorBody {
+                                code: e.code.to_string(),
+                                message: e.to_string(),
+                            },
+                        };
+
+                        writeln!(stdout, "{}", serde_json::to_string(&resp).unwrap()).unwrap();
+                        stdout.flush().unwrap();
+                    }
+                }
             }
 
             _ => {
