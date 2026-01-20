@@ -43,6 +43,7 @@ public class CalculatorController {
                     display.clear();
                 } else {
                     history.getItems().add(expr + " = [ERRO] " + err.getMessage());
+
                 }
                 display.setDisable(false);
             });

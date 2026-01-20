@@ -17,9 +17,13 @@ java {
 dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
 
-    testImplementation(platform("org.junit:junit-bom:5.10.2"))
+    implementation("org.kordamp.ikonli:ikonli-javafx:12.3.1")
+    implementation("org.kordamp.ikonli:ikonli-material2-pack:12.3.1") // Material Design icons
+
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 }
 
 application {

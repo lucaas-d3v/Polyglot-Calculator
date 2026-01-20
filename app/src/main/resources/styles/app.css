@@ -1,35 +1,95 @@
-.root {
-    -fx-font-family: "Inter", "Segoe UI", sans-serif;
-    -fx-background-color: #1e1e1e;
+/* Fundo geral */
+.app-root {
+    -fx-background-color: #15171a;
 }
 
-.text-field {
-    -fx-background-color: #2a2a2a;
-    -fx-text-fill: #ffffff;
-    -fx-prompt-text-fill: #888;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-padding: 10;
+/* Top container */
+.calc-top {
+    -fx-background-color: transparent;
 }
 
-.text-field {
-    -fx-background-color: #2a2a2a;
-    -fx-text-fill: #ffffff;
-    -fx-prompt-text-fill: #888;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-padding: 10;
+/* Display */
+.calc-display {
+    -fx-font-size: 20px;
+    -fx-background-color: #1f2328;
+    -fx-text-fill: #e8eaed;
+    -fx-prompt-text-fill: #8b949e;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #2b3137;
+    -fx-padding: 12;
 }
 
-.button {
-    -fx-background-color: #3a3a3a;
+/* Histórico */
+.calc-history {
+    -fx-background-color: #1a1d21;
+    -fx-control-inner-background: #1a1d21;
+    -fx-border-color: #2b3137;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+/* Grid */
+.calc-grid {
+    -fx-background-color: transparent;
+}
+
+/* Botões base */
+.calc-btn {
+    -fx-font-size: 16px;
+    -fx-background-color: #1f2328;
+    -fx-text-fill: #e8eaed;
+    -fx-background-radius: 10;
+    -fx-padding: 12;
+}
+
+.calc-btn:hover {
+    -fx-background-color: #2a3138;
+}
+
+.calc-btn:pressed {
+    -fx-background-color: #101317;
+}
+
+/* Números */
+.calc-btn-number {
+    -fx-font-weight: bold;
+}
+
+/* Operadores */
+.calc-btn-op {
+    -fx-background-color: #232a33;
+}
+
+.calc-btn-op:hover {
+    -fx-background-color: #2d3641;
+}
+
+/* Igual (destaque) */
+.calc-btn-equals {
+    -fx-background-color: #2f6feb;
     -fx-text-fill: white;
-    -fx-background-radius: 6;
-    -fx-padding: 10 14;
+    -fx-font-weight: bold;
 }
 
-.button:hover {
-    -fx-background-color: #505050;
+.calc-btn-equals:hover {
+    -fx-background-color: #3b7cff;
+}
+
+/* Clear */
+.calc-btn-clear {
+    -fx-background-color: #b42318;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.calc-btn-clear:hover {
+    -fx-background-color: #d92d20;
+}
+
+/* Backspace */
+.calc-btn-backspace {
+    -fx-background-color: #2a2f36;
 }
 
 .list-view {
@@ -69,4 +129,12 @@
 .list-view .scroll-bar:vertical .thumb {
     -fx-background-color: #505050;
     -fx-background-radius: 5;
+}
+
+.button>.graphic {
+    -fx-text-fill: #e8eaed;
+}
+
+.calc-btn-equals>.graphic {
+    -fx-text-fill: white;
 }
